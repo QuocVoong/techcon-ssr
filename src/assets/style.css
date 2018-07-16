@@ -1,0 +1,82 @@
+/*
+Overriding semantic UI fonts to prevent font performance issues
+which makes examples clearer.
+*/
+#root *{
+  font-family: Arial;
+}
+
+#root .icon {
+  font-family: 'Icons';
+}
+
+#root .products .icon {
+  font-size: 2em;
+}
+
+#root .products .category-title {
+  margin-top: 10px;
+}
+
+#root .products {
+  text-align: center;
+}
+
+#root .icon.search {
+  margin-left: -40px;
+  margin-top: 7px;
+  font-size: 1.2em;
+}
+
+.main.container {
+  margin-top: 7em;
+}
+
+.ui.positive.basic.button {
+  display: block;
+  margin-top: 10px;
+}
+
+.cart .right.aligned.content {
+  text-align: right;
+}
+
+.banner {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #CCC;
+  display: none;
+}
+
+.banner.show {
+  display: block;
+}
+
+.banner .content {
+  margin: 10px;
+  text-align: center;
+}
+
+.banner .dismiss {
+  position: absolute;
+  right: 10px;
+  top: 5px;
+}
+
+.btn-reset {
+  background: none;
+  border: 0;
+  color: inherit;
+  /* cursor: default; */
+  font: inherit;
+  line-height: normal;
+  overflow: visible;
+  padding: 0;
+  box-sizing: content-box;
+}
+
+.products .tooltip {
+  margin-top: 10px;
+  max-width: 200px;
+}
