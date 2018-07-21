@@ -5,11 +5,9 @@ import { matchRoutes, renderRoutes } from 'react-router-config';
 import createMemoryHistory from 'history/createMemoryHistory';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
-import AppContainer from '../components/App';
-import routes from '../shared/routes';
-import initRedux from '../shared/redux';
-import Html from '../shared/helpers/Html';
-
+import routes from '../../shared/routes';
+import initReduxStore from '../../shared/redux/index';
+import Template from './template';
 
 export default function renderView(req, res, next) {
   const matches = matchRoutes(routes, req.path);
@@ -17,7 +15,7 @@ export default function renderView(req, res, next) {
 
   if (matches) {
   const history = createMemoryHistory({ initialEntries: [req.originalUrl] });
-    const store = initRedux(history);
+    const store = initReduxStore(history);
 
     let actions = [];
     matches.map(({match, route}) => {
@@ -64,18 +62,16 @@ export default function renderView(req, res, next) {
       }
 
       if (!context.url) {
-        const html = renderToString(
-          <Html
+        const document = renderToString(
+          <Template
             renderedToStringComponents={app}
             serverState={stringifiedServerState}
           />
         );
-        res.send(`<!DOCTYPE html>${html}`);
+        res.send(`<!DOCTYPE html>${document}`);
       } else {
       return res.redirect(301, context.url);
       }
-
-
     });
   } else {
     next();

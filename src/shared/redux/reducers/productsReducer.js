@@ -4,7 +4,8 @@ export default function products(state = {}, action) {
   switch (action.type) {
     case GET_PRODUCTS:
       return {
-        ...state
+        ...state,
+        items: action.data
       };
     case `${GET_PRODUCTS}_ERROR`:
       return {

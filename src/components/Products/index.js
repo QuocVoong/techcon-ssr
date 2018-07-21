@@ -1,4 +1,7 @@
 import React from 'react';
+import { productionActions } from '../../shared/redux/actions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 class Products extends React.Component {
   constructor(props) {
@@ -8,6 +11,12 @@ class Products extends React.Component {
       searchQuery: ''
     };
     this.updateSearchQuery = this.updateSearchQuery.bind(this);
+  }
+
+  static prefetchActions() {
+    return [
+      productionActions.getProducts
+    ];
   }
 
   componentDidMount() {
@@ -22,7 +31,6 @@ class Products extends React.Component {
     if (nextState.searchQuery.length > 0) {
       clearTimeout(this.clearTimer);
     }
-    console.log('cWU');
   }
 
   componentWillUnmount() {
@@ -81,4 +89,16 @@ class Products extends React.Component {
   }
 }
 
-export default Products;
+function mapStateToProps(state) {
+  return {
+    products: state.products,
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    getProducts: bindActionCreators([productionActions.getProducts], dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Products);

@@ -1,25 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
 import { renderRoutes } from 'react-router-config';
+import createBrowserHistory from 'history/createBrowserHistory';
+import { ConnectedRouter } from 'react-router-redux';
 import routes from '../shared/routes';
-import initRedux from '../shared/redux';
+import initReduxStore from '../shared/redux';
 
 const initialState = JSON.parse(window.__SERIALIZED_STATE__);
-console.log(initialState);
+const history = createBrowserHistory();
+const store = initReduxStore(history, initialState);
 
-const store = initRedux(initialState);
-
-function init() {
-  ReactDOM.render(
-    <Provider store={store}>
-      <BrowserRouter>
-        { renderRoutes(routes) }
-      </BrowserRouter>
-    </Provider>,
-    document.getElementById('root')
-  );
-}
-
-init();
+ReactDOM.render(
+  <Provider store={store}>
+    <ConnectedRouter history={history}>
+      { renderRoutes(routes) }
+    </ConnectedRouter>
+  </Provider>,
+  document.getElementById('root')
+);

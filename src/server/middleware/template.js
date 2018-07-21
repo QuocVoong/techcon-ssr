@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import serialize from 'serialize-javascript';
 
-const HTML = (props) => {
+const Template = (props) => {
   return (
     <html lang="en">
     <head>
@@ -21,8 +21,7 @@ const HTML = (props) => {
     />
     <script dangerouslySetInnerHTML={{
       __html: `
-        window.__SERIALIZED_STATE__ =
-         ${serialize(props.serverState, { isJSON: true } )}
+        window.__SERIALIZED_STATE__ = ${serialize(props.serverState)}
       `
     }}
     />
@@ -32,8 +31,8 @@ const HTML = (props) => {
   );
 };
 
-HTML.propTypes = {
+Template.propTypes = {
   renderedToStringComponents: PropTypes.string
 };
 
-export default HTML;
+export default Template;
