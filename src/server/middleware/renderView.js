@@ -5,13 +5,17 @@ import { matchRoutes, renderRoutes } from 'react-router-config';
 import createMemoryHistory from 'history/createMemoryHistory';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
+import Loadable from 'react-loadable';
 import routes from '../../shared/routes';
 import initReduxStore from '../../shared/redux/index';
 import Template from './template';
+import { getBundles } from 'react-loadable/webpack'
+import stats from '../../../dist/react-loadable.json';
 
 export default function renderView(req, res, next) {
   const matches = matchRoutes(routes, req.path);
-  const context = {}
+  const context = {};
+  let modules = [];
 
   if (matches) {
   const history = createMemoryHistory({ initialEntries: [req.originalUrl] });
@@ -20,11 +24,13 @@ export default function renderView(req, res, next) {
     let actions = [];
     matches.map(({match, route}) => {
       const component = route.component;
+      console.log('component: ', component);
       if (component) {
         if (component.displayName &&
             component.displayName.toLowerCase().indexOf('connect') > -1
         ) {
-          let parentComponent = component.WrappedComponent
+          let parentComponent = component.WrappedComponent;
+          console.log('parentComponent: ', parentComponent);
           if (parentComponent.prefetchActions) {
             actions.push(parentComponent.prefetchActions());
           } else if (parentComponent.wrappedComponent && parentComponent.wrappedComponent().prefetchActions) {
@@ -36,6 +42,7 @@ export default function renderView(req, res, next) {
       }
     });
 
+    console.log('actions: ', actions);
     actions = actions.reduce((flat, toFlatten) => {
       return flat.concat(toFlatten);
     }, []);
@@ -46,13 +53,16 @@ export default function renderView(req, res, next) {
 
     Promise.all(promises).then(() => {
       const serverState = store.getState();
+      console.log('serverState: ', serverState);
       const stringifiedServerState = JSON.stringify(serverState);
       const app = renderToString(
         <Provider store={store}>
-          <ConnectedRouter history={history}>
-            <StaticRouter location={req.url} context={context}>
-              { renderRoutes(routes) }
-            </StaticRouter>
+          <ConnectedRouter context={context} history={history}>
+            <Loadable.Capture report={moduleName => modules.push(moduleName)}>
+              <StaticRouter location={req.url} context={context}>
+                { renderRoutes(routes) }
+              </StaticRouter>
+            </Loadable.Capture>
           </ConnectedRouter>
         </Provider>
       );
@@ -61,11 +71,18 @@ export default function renderView(req, res, next) {
         res.status(404);
       }
 
+      let bundles = getBundles(stats, modules);
+
+      const bundlesString = bundles.map(bundle => {
+        return `<script src="${bundle.file}"></script>`
+      }).join('\n');
+
       if (!context.url) {
         const document = renderToString(
           <Template
             renderedToStringComponents={app}
             serverState={stringifiedServerState}
+            bundlesString={bundlesString}
           />
         );
         res.send(`<!DOCTYPE html>${document}`);

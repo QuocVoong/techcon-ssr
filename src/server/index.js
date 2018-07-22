@@ -1,4 +1,3 @@
-require('babel-register');
 import express from 'express';
 import Loadable from 'react-loadable';
 import expressRouter from './api/routes'
@@ -11,6 +10,9 @@ app.use(express.static('dist'));
 app.use(expressRouter);
 app.get('/*', renderViewMiddleware);
 
-app.listen(8080, () => {
-  console.log('App listening on port: 8080');
+Loadable.preloadAll().then(() => {
+  app.listen(8080, () => {
+    console.log('App running at http://localhost:8080/');
+  });
 });
+

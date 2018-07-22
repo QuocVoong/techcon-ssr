@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { cartActions } from '../../shared/redux/actions';
@@ -14,6 +15,7 @@ class Cart extends Component {
   }
 
   constructor(props) {
+    console.log('props: ', props);
     super(props);
     this.proceedToCheckout = this.proceedToCheckout.bind(this);
   }
@@ -90,4 +92,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Cart);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Cart));

@@ -25,7 +25,11 @@ const Template = (props) => {
       `
     }}
     />
-    <script type="application/javascript" src="/bundle.js" />
+    <script src="/app.bundle.js" />
+    <script src="/vendor.bundle.js" />
+    <div
+      dangerouslySetInnerHTML={{ __html: props.bundlesString }}
+    />
     </body>
     </html>
   );

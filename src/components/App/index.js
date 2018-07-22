@@ -9,7 +9,7 @@ const App = (props) => {
   return (
     <div>
       <div className="ui fixed inverted menu">
-        <h1 className="header item">All Things Westies</h1>
+        <h1 className="header item">My Westies</h1>
         <Link to="/products" className="item">Products</Link>
         <Link to="/cart" className="item">Cart</Link>
       </div>

@@ -1,18 +1,17 @@
+import React from 'react';
 import Loadable from 'react-loadable';
 import App from '../components/App';
-import Products from '../components/Products';
-import Cart from '../components/Cart';
 import NotFound from '../components/NotFound';
 
-// const ProductsLoadable = Loadable({
-//   loader: () => require('../components/Products'),
-//   loading: () => <div>Loading</div>
-// });
+const ProductsLoadable = Loadable({
+  loader: () => import("../components/Products" /* webpackChunkName: "products" */).then(module => module.default),
+  loading: () => <div>Loading!</div>
+});
 
-// const CartLoadable = Loadable({
-//   loader: () => require('../components/Cart'),
-//   loading: () => <div>Loading!</div>
-// });
+const CartLoadable = Loadable({
+  loader: () => import("../components/Cart" /* webpackChunkName: "cart" */).then(module => module.default),
+  loading: () => <div>Loading!</div>
+});
 
 const routes = [
   {
@@ -21,15 +20,15 @@ const routes = [
       {
         path: '/',
         exact: true,
-        component: Products
+        component: ProductsLoadable
       },
       {
         path: '/products',
-        component: Products
+        component: ProductsLoadable
       },
       {
         path: '/cart',
-        component: Cart
+        component: CartLoadable
       },
       {
         ...NotFound

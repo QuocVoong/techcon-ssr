@@ -1,12 +1,25 @@
+const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { ReactLoadablePlugin } = require('react-loadable/webpack');
 
 module.exports = {
-  entry: "./src/client/index.js",
-  devtool: "source-map",
-  output: {
-    path: __dirname,
-    filename: "dist/bundle.js"
+  mode: 'development',
+  entry: {
+    app: './src/client/index.js',
+    vendor: ['react', 'react-dom'],
   },
+  output: {
+    path: path.join(__dirname, 'dist'),
+    filename: '[name].bundle.js'
+  },
+  plugins: [
+    new CopyWebpackPlugin([
+      { from: __dirname + '/assets', to: __dirname + '/dist/assets' }
+    ]),
+    new ReactLoadablePlugin({
+      filename: "./dist/react-loadable.json",
+    })
+  ],
   module: {
     rules: [
       {
@@ -23,12 +36,18 @@ module.exports = {
       }
     ]
   },
-  plugins: [
-    new CopyWebpackPlugin([
-      { from: __dirname + '/assets', to: __dirname + '/dist/assets' }
-    ])
-  ],
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendor',
+          chunks: 'all'
+        }
+      }
+    }
+  },
   resolve: {
     extensions: ['.js', '.jsx', '.css', '.es6', '.json']
-  }
+  },
 };
