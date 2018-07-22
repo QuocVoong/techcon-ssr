@@ -5,7 +5,7 @@ const { ReactLoadablePlugin } = require('react-loadable/webpack');
 module.exports = {
   mode: 'development',
   entry: {
-    app: './src/client/index.js',
+    app: ['babel-polyfill', './src/client/index.js'],
     vendor: ['react', 'react-dom'],
   },
   output: {

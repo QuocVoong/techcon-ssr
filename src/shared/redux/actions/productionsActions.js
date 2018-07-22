@@ -7,7 +7,6 @@ export function getProducts() {
       method: 'GET',
     }).then((response) => {
       return response.json().then((data) => {
-        console.log('data: ', data);
         return dispatch({
           type: GET_PRODUCTS,
           data: [data],

@@ -11,38 +11,31 @@ import initReduxStore from '../../shared/redux/index';
 import Template from './template';
 import { getBundles } from 'react-loadable/webpack'
 import stats from '../../../dist/react-loadable.json';
+import asyncMatchRoutes from '../../shared/helpers/asyncMatchRoutes';
 
-export default function renderView(req, res, next) {
-  const matches = matchRoutes(routes, req.path);
+export default async function renderView(req, res, next) {
+  const { match, component } = await asyncMatchRoutes(routes, req.path);
   const context = {};
   let modules = [];
-
-  if (matches) {
+  if (match) {
   const history = createMemoryHistory({ initialEntries: [req.originalUrl] });
     const store = initReduxStore(history);
 
     let actions = [];
-    matches.map(({match, route}) => {
-      const component = route.component;
-      console.log('component: ', component);
-      if (component) {
-        if (component.displayName &&
-            component.displayName.toLowerCase().indexOf('connect') > -1
-        ) {
-          let parentComponent = component.WrappedComponent;
-          console.log('parentComponent: ', parentComponent);
-          if (parentComponent.prefetchActions) {
-            actions.push(parentComponent.prefetchActions());
-          } else if (parentComponent.wrappedComponent && parentComponent.wrappedComponent().prefetchActions) {
-            actions.push(parentComponent.wrappedComponent().prefetchActions());
-          }
-        } else if (component.prefetchActions) {
-          actions.push(component.prefetchActions());
+    if (component) {
+      if (component.displayName &&
+        component.displayName.toLowerCase().indexOf('connect') > -1
+      ) {
+        let parentComponent = component.WrappedComponent;
+        if (parentComponent.prefetchActions) {
+          actions.push(parentComponent.prefetchActions());
+        } else if (parentComponent.wrappedComponent && parentComponent.wrappedComponent().prefetchActions) {
+          actions.push(parentComponent.wrappedComponent().prefetchActions());
         }
+      } else if (component.prefetchActions) {
+        actions.push(component.prefetchActions());
       }
-    });
-
-    console.log('actions: ', actions);
+    }
     actions = actions.reduce((flat, toFlatten) => {
       return flat.concat(toFlatten);
     }, []);
@@ -53,7 +46,6 @@ export default function renderView(req, res, next) {
 
     Promise.all(promises).then(() => {
       const serverState = store.getState();
-      console.log('serverState: ', serverState);
       const stringifiedServerState = JSON.stringify(serverState);
       const app = renderToString(
         <Provider store={store}>

@@ -4,12 +4,12 @@ import App from '../components/App';
 import NotFound from '../components/NotFound';
 
 const ProductsLoadable = Loadable({
-  loader: () => import("../components/Products" /* webpackChunkName: "products" */).then(module => module.default),
+  loader: () => import("../components/Products" /* webpackChunkName: "products" */),
   loading: () => <div>Loading!</div>
 });
 
 const CartLoadable = Loadable({
-  loader: () => import("../components/Cart" /* webpackChunkName: "cart" */).then(module => module.default),
+  loader: () => import("../components/Cart" /* webpackChunkName: "cart" */),
   loading: () => <div>Loading!</div>
 });
 

@@ -15,7 +15,6 @@ class Cart extends Component {
   }
 
   constructor(props) {
-    console.log('props: ', props);
     super(props);
     this.proceedToCheckout = this.proceedToCheckout.bind(this);
   }
