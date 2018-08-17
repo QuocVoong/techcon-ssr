@@ -6,13 +6,16 @@ const Template = (props) => {
   return (
     <html lang="en">
     <head>
-      <title>All Things Westies</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <meta name="theme-color" content="#5f5eaa" />
+      <meta name="Description" content="My demo website" />
+      <title>All Things Website</title>
       <link rel="shortcut icon" href="/assets/favicon.ico" />
       <link
         rel="stylesheet"
-        href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css"
       />
       <link rel="stylesheet" href="/assets/style.css" />
+      {/*<link rel="stylesheet" href="/assets/semantic.min.css" />*/}
     </head>
     <body>
     <div

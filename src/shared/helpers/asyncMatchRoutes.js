@@ -25,7 +25,8 @@ const asyncMatchRoutes = async (routes, pathname) => {
   const match = matchRoutes(routes, pathname);
   const params = getParams(match);
   const components = await getComponents(match);
-  const component = find(components, (component) => component.default).default;
+  const _component = find(components, (component) => component.default);
+  const component = _component ? _component.default : undefined;
   return { components, match, params, component };
 };
 
